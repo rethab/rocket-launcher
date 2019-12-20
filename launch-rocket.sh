@@ -42,7 +42,7 @@ while [[ "$#" -gt 0 ]]; do case $1 in
   --no-replace) REPLACE=false;;
   --app)        APP="$2"; shift;;
   --help)       SHOW_HELP=true;;
-  *)            printf 'Error: Unknown parameter: %s\n' $1 >&2; exit 1;;
+  *)            printf 'Error: Unknown parameter: %s\n' "$1" >&2; exit 1;;
 esac; shift; done
 
 if [ "$SHOW_HELP" = true ] 
@@ -75,7 +75,7 @@ then
 
   eval 'vars=(${!'"ROCKET_REPLACE"'@})';
   
-  for var in "${vars[@]}"
+  for var in "${vars[@]:?}"
   do
       # rhs in sed must be escaped: https://unix.stackexchange.com/a/129063
       val=$(printf '%s\n' "${!var}" | sed 's:[\/&]:\\&:g;$!s/$/\\/');
@@ -96,4 +96,4 @@ fi
 # where we need to bind to
 export ROCKET_PORT=${PORT:-8000}
 
-exec ${APP}
+exec "${APP}"
