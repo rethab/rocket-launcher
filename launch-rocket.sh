@@ -23,6 +23,8 @@
 # (without replacements):
 #  ./launch-rocket.sh --no-replace --app target/debug/myapp
 #
+# (print credentials)
+#  ./launch-rocket.sh --insecure --app target/debug/myapp
 #
 # Preconditions:
 #  - Rocket.toml must exist in current directory
@@ -37,10 +39,12 @@ set -eu
 ROCKET_FILE="Rocket.toml"
 REPLACE=true
 SHOW_HELP=false
+INSECURE=false
 
 while [[ "$#" -gt 0 ]]; do case $1 in
   --no-replace) REPLACE=false;;
   --app)        APP="$2"; shift;;
+  --insecure)   INSECURE=true;;
   --help)       SHOW_HELP=true;;
   *)            printf 'Error: Unknown parameter: %s\n' "$1" >&2; exit 1;;
 esac; shift; done
@@ -96,4 +100,9 @@ fi
 # where we need to bind to
 export ROCKET_PORT=${PORT:-8000}
 
-exec "${APP}"
+if [ "$INSECURE" = true ]
+then
+  exec "${APP}"
+else
+  exec "${APP}" | grep -v "\[extra\]"
+fi
