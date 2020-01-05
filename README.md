@@ -24,6 +24,10 @@ RUN curl -o /launch-rocket.sh https://raw.githubusercontent.com/rethab/rocket-la
 CMD /launch-rocket.sh --app my-rocket-app
 ```
 
+## Options
+- `--no-replace` start app without replacing any variables
+- `--insecure` prints database (and other) credentials during startup
+
 
 ## Heroku
 This script transparently works with heroku by taking the `$PORT` variable (which is set by heroku) and setting its value to `$ROCKET_PORT` (which is the one used by rocket). When deploying to heroku, don't forget to also define `$ROCKET_ENV`, because otherwise rocket binds to `localhost` which won't work.
